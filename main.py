@@ -1,16 +1,25 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# CORS 설정 (프론트엔드 연결 허용)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def read_root():
     return {"message": "Hello from FastAPI on Render!"}
 
 class PredictRequest(BaseModel):
-    input_text: str
+    input: str
 
 @app.post("/predict")
 def predict(request: PredictRequest):
-    # 예시 응답 (여기서 실제 처리 로직으로 교체 가능)
-    return {"result": f"Prediction for: {request.input_text}"}
+    return {"result": f"Prediction for: {request.input}"}
